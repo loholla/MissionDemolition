@@ -11,6 +11,8 @@ public class Slingshot : MonoBehaviour {
     public GameObject projectilePrefab;
     public float velocityMult = 10f;
     public GameObject projLinePrefab;
+    public AudioSource audioSource;
+    public AudioClip audioClip;
 
     [Header("Dynamic")]
     public GameObject launchPoint;
@@ -37,6 +39,7 @@ public class Slingshot : MonoBehaviour {
     }
 
     void OnMouseDown(){
+        audioSource.mute = false;
         aimingMode = true;
         projectile = Instantiate(projectilePrefab) as GameObject;
         projectile.transform.position = launchPos;
@@ -61,6 +64,7 @@ public class Slingshot : MonoBehaviour {
         projectile.transform.position = projPos;
         rubber.SetPosition(1, projPos);
         if (Input.GetMouseButtonUp(0)) {
+            audioSource.PlayOneShot(audioClip, 1);
             rubber.SetPosition(1, pointOne.position);
             aimingMode = false;
             Rigidbody projRB = projectile.GetComponent<Rigidbody>();

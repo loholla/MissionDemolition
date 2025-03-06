@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum GameMode {
     idle,
@@ -70,8 +71,7 @@ public class MissionDemolition : MonoBehaviour {
     void NextLevel() {
         level++;
         if (level == levelMax) {
-            level = 0;
-            shotsTaken = 0;
+            SceneManager.LoadScene("MainMenu");
         }
         StartLevel();
     }
@@ -82,5 +82,12 @@ public class MissionDemolition : MonoBehaviour {
 
     static public GameObject GET_CASTLE() {
         return S.castle;
+    }
+
+    public void StartGame() {
+        SceneManager.LoadScene("_Scene_0");
+        level = 0;
+        shotsTaken = 0;
+        StartLevel();
     }
 }
