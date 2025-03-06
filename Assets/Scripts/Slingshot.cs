@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Slingshot : MonoBehaviour {
+    [SerializeField] private LineRenderer rubber;
+    [SerializeField] private Transform pointOne;
+    [SerializeField] private Transform pointTwo;
+
     [Header("Inscribed")]
     public GameObject projectilePrefab;
     public float velocityMult = 10f;
+    public GameObject projLinePrefab;
 
     [Header("Dynamic")]
     public GameObject launchPoint;
@@ -14,6 +19,9 @@ public class Slingshot : MonoBehaviour {
     public bool aimingMode;
 
     void Awake(){
+        rubber.SetPosition(0, pointOne.position);
+        rubber.SetPosition(1, pointOne.position);
+        rubber.SetPosition(2, pointTwo.position);
         Transform launchPointTrans = transform.Find("LaunchPoint");
         launchPoint = launchPointTrans.gameObject;
         launchPoint.SetActive(false);
@@ -51,13 +59,16 @@ public class Slingshot : MonoBehaviour {
 
         Vector3 projPos = launchPos + mouseDelta;
         projectile.transform.position = projPos;
-
+        rubber.SetPosition(1, projPos);
         if (Input.GetMouseButtonUp(0)) {
+            rubber.SetPosition(1, pointOne.position);
             aimingMode = false;
             Rigidbody projRB = projectile.GetComponent<Rigidbody>();
             projRB.isKinematic = false;
             projRB.collisionDetectionMode = CollisionDetectionMode.Continuous;
             projRB.linearVelocity = -mouseDelta * velocityMult;
+            FollowCam.POI = projectile;
+            Instantiate<GameObject>(projLinePrefab, projectile.transform);
             projectile = null;
         }
     }
